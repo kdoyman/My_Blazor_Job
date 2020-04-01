@@ -154,10 +154,6 @@
               "target": "Package",
               "version": "[3.1.1, )"
             },
-            "Radzen.Blazor": {
-              "target": "Package",
-              "version": "[2.3.7, )"
-            },
             "Serilog": {
               "target": "Package",
               "version": "[2.9.0, )"

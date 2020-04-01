@@ -21,10 +21,8 @@
     <script src="_content/BlazoStrap/blazorStrap.js"></script>
     <script src="_content/BlazoStrap/popper.min.js"></script>
 
-    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default.css" />
-    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
-
     <link rel="stylesheet" href="~/css/style.css" />
+
 </head>
 <body>
     @if (User.Identity.IsAuthenticated)
@@ -52,8 +50,6 @@
             <div class="login-box">
                 <h1>You are not logged into this application.</h1>
                 <a class="btn-rex" href="/Login">Login</a>
-
-
             </div>
         </div>
     }

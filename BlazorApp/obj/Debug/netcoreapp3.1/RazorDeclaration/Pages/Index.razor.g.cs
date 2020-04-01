@@ -85,20 +85,6 @@ using CustomerLibrary;
 #nullable disable
 #nullable restore
 #line 11 "C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\_Imports.razor"
-using Radzen;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 12 "C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\_Imports.razor"
-using Radzen.Blazor;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
-#line 13 "C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\_Imports.razor"
 using BlazorStrap;
 
 #line default

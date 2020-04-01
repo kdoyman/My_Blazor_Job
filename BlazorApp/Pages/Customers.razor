@@ -1,6 +1,5 @@
 ﻿@page "/customers"
 @using System.Net.Http
-@using System.Net.Http.Headers
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Authentication
 @using Serilog
@@ -21,7 +20,7 @@
         </td>
         <td> </td>
         <td align="right">
-            <RadzenButton Text="Add New Customer" Click="AddNewCustomer"></RadzenButton>
+            <BSButton OnClick="AddNewCustomer">Add New Customer</BSButton>
         </td>
         <td width="10"> </td>
     </tr>
@@ -35,41 +34,81 @@
     <EditForm Model="@custObj" OnValidSubmit="@AddCustomer">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <p>
-            <label for="CompanyName">CompanyName:</label>
-            <InputText id="CompanyName" @bind-Value="custObj.CompanyName" />
-        </p>
-        <p>
-            <label for="ContactName">ContactName&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="ContactName" @bind-Value="custObj.ContactName" />
-        </p>
-        <p>
-            <label for="Address">Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="Address" @bind-Value="custObj.Address" />
-        </p>
-        <p>
-            <label for="City">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="City" @bind-Value="custObj.City" />
-        </p>
-        <p>
-            <label for="Region">Region&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="Region" @bind-Value="custObj.Region" />
-        </p>
-        <p>
-            <label for="PostalCode">PostalCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="PostalCode" @bind-Value="custObj.PostalCode" />
-        </p>
-        <p>
-            <label for="Country">Country&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="Country" @bind-Value="custObj.Country" />
-        </p>
-        <p>
-            <label for="Phone">Phone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</label>
-            <InputText id="Phone" @bind-Value="custObj.Phone" />
-        </p>
+        <table class="form-group">
+            <tr>
+                <td>
+                    <label for="CompanyName" class="control-label">Company Name</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.CompanyName" />
+                </td>
+                <td width="20"> </td>
+                <td>
+                    <label for="ContactName" class="control-label">Contact Name</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.ContactName" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Address" class="control-label">Address</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.Address" />
+                </td>
+                <td width="20"> </td>
+                <td>
+                    <label for="City" class="control-label">City</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.City" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Region" class="control-label">Region</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.Region" />
+                </td>
+                <td width="20"> </td>
+                <td>
+                    <label for="PostalCode" class="control-label">PostalCode</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.PostalCode" />
+                </td>
+            </tr>
+            <tr>
 
-        <BSButton type="submit" Color="Color.Success">Save</BSButton>
-        <BSButton OnClick="AddNewCustomer" Color="Color.Danger">Cancel</BSButton>
+                <td>
+                    <label for="Country" class="control-label">Country</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.Country" />
+                </td>
+                <td width="20"> </td>
+                <td>
+                    <label for="Phone" class="control-label">Phone</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" @bind="@custObj.Phone" />
+                </td>
+                <td width="20"> </td>
+                <td>
+                </td>
+                <td>
+                    <BSButton type="submit" Color="Color.Success" style="width:220px;">Save</BSButton>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <BSButton OnClick="AddNewCustomer" Color="Color.Danger" style="width:220px;">Cancel</BSButton>
+                </td>
+            </tr>
+        </table>
+
     </EditForm>
 }
 <table width="100%" style="background:#0A2464;color:honeydew">
@@ -85,7 +124,7 @@
     </tr>
 </table>
 
-@if (custs == null)
+@if ((custs == null || custs.Count() == 0) && !IamSearching)
 {
     <p><em>Loading...</em></p>
 
@@ -95,39 +134,55 @@
 }
 else
 {
-    <form>
-        <label for="CustomersPerPage">Choose the number of customers to be displayed per page:</label>
-        <select id="CustomersPerPage" name="CustomersPerPage" @onchange="@DoStuff">
-            <option value=" "> </option>
-            <option value="five">5</option>
-            <option value="ten">10</option>
-            <option value="fifteen">15</option>
-            <option value="twenty">20</option>
-        </select>
-        <p>Currently: @CustomersPerPage Customers per page</p>
-    </form>
+    <BSBasicForm IsInline="true">
+        <BSFormGroup Class="mb-2 mr-sm-2 mb-sm-0">
+            <BSLabel For="SearchCusto" Class="mr-sm-2">Search Customers:</BSLabel>
+            <BSBasicInput InputType="InputType.Search" Name="searchbar" Id="SearchCusto" @bind-Value="@cust_to_search" />
+        </BSFormGroup>
+        <BSButton OnClick="Search_Fun">Search</BSButton>
+    </BSBasicForm>
+    if (IamSearching)
+    {
+        <h5>(To go back search void)</h5>
+        <h3>Customers found in selected page [ @custcountl ] :</h3>        
+    }
 
-    <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="@CustomersPerPage"
-                AllowSorting="true" Data="@custs" TItem="Customer" ColumnWidth="150px" RowSelect="RowSelect">
-        <Columns>
-            <RadzenGridColumn TItem="Customer" Property="CompanyName" Title="CompanyName"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="ContactName" Title="ContactName"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="Country" Title="Country"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="Address" Title="Address"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="City" Title="City"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="Region" Title="Region"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="PostalCode" Title="PostalCode"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer" Property="Phone" Title="Phone"></RadzenGridColumn>
-            <RadzenGridColumn TItem="Customer">
-                <Template Context="data">
-                    <button class="btn btn-primary" @onclick="@(async () => await EditCustomer(data.Id))" style="width:50px;">Edit</button>
-                    <button class="btn btn-danger" @onclick="@(async () => await DeleteCustomer(data.Id))" style="width:70px;">Delete</button>
-                </Template>
-            </RadzenGridColumn>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th scope="col">CompanyName</th>
+                <th scope="col">ContactName</th>
+                <th scope="col">Address</th>
+                <th scope="col">City</th>
+                <th scope="col">Region</th>
+                <th scope="col">PostalCode</th>
+                <th scope="col">Country</th>
+                <th scope="col">Phone</th>
+            </tr>
+        </thead>
 
+        <tbody>
+            @foreach (Customer cus in custs)
+            {
+                <tr>
+                    <td>@cus.CompanyName</td>
+                    <td>@cus.ContactName</td>
+                    <td>@cus.Address</td>
+                    <td>@cus.City</td>
+                    <td>@cus.Region</td>
+                    <td>@cus.PostalCode</td>
+                    <td>@cus.Country</td>
+                    <td>@cus.Phone</td>
+                    <BSButton Color="Color.Info" @onclick="(async () => await EditCustomer(cus.Id))">Edit</BSButton>
+                    <BSButton Color="Color.Danger" @onclick="(async () => await DeleteCustomer(cus.Id))">Delete</BSButton>
 
-        </Columns>
-    </RadzenGrid>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
     @if (active)
     {
         <BSPagination Alignment="Alignment.Right">
@@ -159,10 +214,25 @@ else
             </BSPaginationItem>
         </BSPagination>
     }
+    if (!IamSearching)
+    {
+        <form>
+            <label for="CustomersPerPage">Choose the number of customers to be displayed per page:</label>
+            <select id="CustomersPerPage" name="CustomersPerPage" @onchange="@DoStuff">
+                <option value="five">5</option>
+                <option value="ten">10</option>
+                <option value="fifteen">15</option>
+                <option value="twenty">20</option>
+                <option value="max">All</option>
+            </select>
+        </form>
+    }
+    if (!IamSearching){ <h5>Total Customers Found: @custcountl</h5>}
 }
 
 @code {
-    private Customer[] custs;
+
+    private static List<Customer> custs = new List<Customer>();
     string baseUrl = "https://localhost:44311/";
     Customer custObj = new Customer();
 
@@ -172,18 +242,22 @@ else
     bool loadFailed;
 
     Customer SelectedCustomer = null;
-    public static int CustomersPerPage { get; set; } = 5;
-    public static int Pagenumber { get; set; } = 1;
-    public static int OldPage;
+    private static string cust_to_search_prive;
+    public string cust_to_search { get { return cust_to_search_prive; } set { cust_to_search_prive = value; Search_Fun(); } }
+    public int CustomersPerPage { get; set; } = 5;
+    public int Pagenumber { get; set; } = 1;
     bool state = false;
+    public static bool IamSearching = false;
+    List<Customer> Customers_Found = new List<Customer>();
+    int i = 0;
 
-    private long custcountl;
-    private bool active = true;
+    private static long custcountl;
+    private static bool active = true;
     public int MaxPage
     {
         get
         {
-            if (Math.Ceiling((double)(custcountl) / CustomersPerPage) <= 1) { active = false; }
+            if (Math.Ceiling((double)(custcountl) / CustomersPerPage) <= 1) { active = false; } else { active = true; }
             return Convert.ToInt32(Math.Ceiling(Convert.ToDouble(custcountl) / CustomersPerPage));
         }
 
@@ -194,7 +268,7 @@ else
         SelectedCustomer = c;
     }
 
-    void DoStuff(ChangeEventArgs e)
+    async Task DoStuff(ChangeEventArgs e)
     {
         switch (e.Value)
         {
@@ -202,13 +276,15 @@ else
             case "ten": if (CustomersPerPage == 10) { break; } else { CustomersPerPage = 10; state = true; break; }
             case "fifteen": if (CustomersPerPage == 15) { break; } else { CustomersPerPage = 15; state = true; break; }
             case "twenty": if (CustomersPerPage == 20) { break; } else { CustomersPerPage = 20; state = true; break; }
+            case "max": if (CustomersPerPage == custcountl) { break; } else { CustomersPerPage = Convert.ToInt32(custcountl); state = true; break; }
             default:
                 break;
         }
-        Console.WriteLine("It is definitely: " + CustomersPerPage);
+        Console.WriteLine("It is definitely: " + CustomersPerPage + "customers per page");
         if (state)
         {
-            NavigationManager.NavigateTo("customers", true);
+            Pagenumber = 1;
+            await load();
         }
         else
         {
@@ -216,56 +292,55 @@ else
         }
     }
 
-    public void setpage()
+    public async Task setpage()
     {
 
         Pagenumber = Pagenumber;
-        if (Pagenumber != OldPage)
-        {
-            NavigationManager.NavigateTo("customers", true);
-        }
+
+        await load();
+
     }
 
-    protected void onclick(MouseEventArgs e)
+    protected async Task onclick(MouseEventArgs e)
     {
-        if (Pagenumber != OldPage) {
-            NavigationManager.NavigateTo("customers", true);
-        }
+
+        await load();
+
     }
 
-    protected void onclicklast(MouseEventArgs e)
+    protected async Task onclicklast(MouseEventArgs e)
     {
         Pagenumber = MaxPage;
-        if (Pagenumber != OldPage)
-        {
-            NavigationManager.NavigateTo("customers", true);
-        }
+
+        await load();
+
     }
 
-    protected void onclickfirst(MouseEventArgs e)
+    protected async Task onclickfirst(MouseEventArgs e)
     {
         Pagenumber = 1;
-        if (Pagenumber != OldPage)
-        {
-            NavigationManager.NavigateTo("customers", true);
-        }
+
+        await load();
+
     }
 
-    protected void onclicknext(MouseEventArgs e)
+    protected async Task onclicknext(MouseEventArgs e)
     {
         if (Pagenumber != MaxPage)
         {
             Pagenumber = Pagenumber + 1;
-            NavigationManager.NavigateTo("customers", true);
+            await load();
+
         }
     }
 
-    protected void onclickbw(MouseEventArgs e)
+    protected async Task onclickbw(MouseEventArgs e)
     {
         if (Pagenumber != 1)
         {
             Pagenumber--;
-            NavigationManager.NavigateTo("customers", true);
+            await load();
+            //NavigationManager.NavigateTo("customers");
         }
     }
 
@@ -273,19 +348,21 @@ else
     {
         try
         {
-            ids = "0";
-            OldPage = Pagenumber;
-            var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-            if (accessToken != null)
+            if (!IamSearching)
             {
-                if(Http.DefaultRequestHeaders.Authorization == null)
+                ids = "0";
+                cust_to_search_prive = string.Empty;
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+                if (accessToken != null)
                 {
-                    Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                    if (Http.DefaultRequestHeaders.Authorization == null)
+                    {
+                        Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                    }
                 }
+
+                await load();
             }
-
-            await load();
-
         }
         catch (Exception)
         {
@@ -298,9 +375,113 @@ else
     protected async Task load()
     {
         custcountl = await Http.GetJsonAsync<long>($"{baseUrl}api/customers/GetCount");
+        if (IamSearching) { CustomersPerPage = Convert.ToInt32(custcountl); }
         if (Pagenumber > MaxPage && MaxPage != 0) { Pagenumber = MaxPage; }
         else if (Pagenumber < 1) { Pagenumber = 1; }
-        custs = await Http.GetJsonAsync<Customer[]>($"{baseUrl}api/customers/getall?pagenum={Pagenumber}&customersPerPage={CustomersPerPage}");
+        custs = (await Http.GetJsonAsync<Customer[]>($"{baseUrl}api/customers/getall?pagenum={Pagenumber}&customersPerPage={CustomersPerPage}")).ToList();
+
+    }
+
+    public void Search_Fun()
+    {
+
+        if (cust_to_search != string.Empty && cust_to_search != null)
+        {
+            IamSearching = true;
+            foreach (Customer cus in custs)
+            {
+                if (cus.CompanyName != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.CompanyName.Contains(cust_to_search))
+                    {
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+                }
+                if (cus.ContactName != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.ContactName.Contains(cust_to_search))
+                    {
+
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+                if (cus.Address != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.Address.Contains(cust_to_search))
+                    {
+
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+                if (cus.Country != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.Country.Contains(cust_to_search))
+                    {
+
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+                if (cus.City != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.City.Contains(cust_to_search))
+                    {
+
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+                if (cus.Phone != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.Phone.Contains(cust_to_search))
+                    {
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+                if (cus.Region != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.Region.Contains(cust_to_search))
+                    {
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+                if (cus.PostalCode != null)
+                {
+                    if (Customers_Found.Count != 0) { if (Customers_Found.Last().Id == cus.Id) { continue; } }
+                    if (cus.PostalCode.Contains(cust_to_search))
+                    {
+
+                        Customers_Found.Add(cus);
+                        i++;
+                    }
+
+                }
+            }
+            custcountl = Customers_Found.Count();
+            custs = Customers_Found;
+
+            NavigationManager.NavigateTo("customers", true);
+
+        }
+        else { IamSearching = false; NavigationManager.NavigateTo("customers", true); }
     }
 
     void AddNewCustomer()
@@ -312,15 +493,31 @@ else
     // Add New Customer Details Method
     protected async Task AddCustomer()
     {
+        if (IamSearching)
+        {
+            var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            if (accessToken != null)
+            {
+                if (Http.DefaultRequestHeaders.Authorization == null)
+                {
+                    Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                }
+            }
+        }
+
         if (ids == "0")
 
         {
             await Http.SendJsonAsync(HttpMethod.Post, $"{baseUrl}api/customers/", custObj);
+            IamSearching = false;
+            cust_to_search_prive = string.Empty;
             await load();
         }
         else
         {
             await Http.SendJsonAsync(HttpMethod.Put, $"{baseUrl}api/customers/" + custObj.Id, custObj);
+            IamSearching = false;
+            cust_to_search_prive = string.Empty;
             await load();
         }
 
@@ -334,6 +531,19 @@ else
         ids = "1";
         try
         {
+            if (IamSearching)
+            {
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+                if (accessToken != null)
+                {
+                    if (Http.DefaultRequestHeaders.Authorization == null)
+                    {
+                        Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                    }
+                }
+                IamSearching = false;
+                cust_to_search_prive = string.Empty;
+            }
             loadFailed = false;
             ids = CustomerID.ToString();
             custObj = await Http.GetJsonAsync<Customer>
@@ -356,11 +566,23 @@ else
     {
         showAddrow = false;
         bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this customer?");
+        if (IamSearching)
+        {
+            var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            if (accessToken != null)
+            {
+                if (Http.DefaultRequestHeaders.Authorization == null)
+                {
+                    Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
+                }
+            }
+        }
         if (confirmed)
         {
             ids = CustomerID.ToString();
             await Http.DeleteAsync($"{baseUrl}api/customers/" + CustomerID);
-
+            IamSearching = false;
+            cust_to_search_prive = string.Empty;
             await load();
         }
     }

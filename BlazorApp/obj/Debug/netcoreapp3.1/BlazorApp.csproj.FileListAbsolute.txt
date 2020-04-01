@@ -41,8 +41,6 @@ C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3
 C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\obj\Debug\netcoreapp3.1\BlazorApp.csprojAssemblyReference.cache
 C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Customers.razor.g.cs
 C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3.1\BlazorApp.StaticWebAssets.xml
-C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3.1\Radzen.Blazor.dll
-C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3.1\System.Linq.Dynamic.Core.dll
 C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Blazor.HttpClient.dll
 C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3.1\System.Text.Json.dll
 C:\Users\koko\source\repos\New_MFJ\My_Future_Job\BlazorApp\bin\Debug\netcoreapp3.1\BlazorComponentUtilities.dll
